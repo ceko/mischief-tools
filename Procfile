@@ -1,2 +1,2 @@
-web:        gunicorn mm_tools.web.wsgi:application --log-file -
+web:        gunicorn mm_tools.web.wsgi:application
 release:    bash ./release
