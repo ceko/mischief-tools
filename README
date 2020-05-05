@@ -1,0 +1,7 @@
+# Development
+
+- Copy .env.template to .env
+- Create virtual environment
+- Activate virtual environment
+- Apply requirements file (pip install -r requirements.txt)
+- Start dev server (PYTHONPATH=. ./mm_tools/web/manage.py runserver)
