@@ -1,1 +1,1 @@
-python ./web/manage.py migrate
+python ./mm_tools/web/manage.py migrate
