@@ -1,0 +1,6 @@
+{% extends 'mm_tools.web/base.html' %}
+{% load socialaccount %}
+
+{% block body %}
+    <a href="{% provider_login_url "discord" process="login" %}">Connect a Twitter account</a>
+{% endblock %}

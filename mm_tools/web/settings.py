@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+import django_heroku
 import os
 import distutils.util
 
@@ -25,7 +26,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(distutils.util.strtobool(os.environ.get("DEBUG", "False")))
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = ['*', ]
+SITE_ID = 1
 
 # Application definition
 
@@ -35,8 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
-    'mm_tools.web'
+    'mm_tools.web',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.discord',
 ]
 
 MIDDLEWARE = [
@@ -63,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -100,6 +109,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -137,5 +153,18 @@ LOGGING = {
     },
 }
 
-import django_heroku
+SOCIALACCOUNT_PROVIDERS = {
+    'discord': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': os.getenv('DISCORD_CLIENT_ID'),
+            'secret': os.getenv('DISCORD_CLIENT_SECRET'),
+            'key': ''
+        }
+    }
+}
+SOCIALACCOUNT_ADAPTER = 'mm_tools.web.auth_adapter.AccountAdapter'
+
 django_heroku.settings(locals())
