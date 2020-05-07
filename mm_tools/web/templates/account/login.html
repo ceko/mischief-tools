@@ -1,6 +1,108 @@
-{% extends 'mm_tools.web/base.html' %}
 {% load socialaccount %}
+{% load static %}
 
-{% block body %}
-    <a href="{% provider_login_url "discord" process="login" %}">Connect a Twitter account</a>
-{% endblock %}
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Mischief Tools Login</title>
+</head>
+
+<body>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            background: #EEE;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            font-size: 16px;
+            color: #444;
+            line-height: 1.35em;
+        }
+
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+        }
+
+        .header > div {
+            height: 50px;
+            max-width: 800px;
+            margin: auto;
+            padding: 0px 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header .wordmark {
+            font-size: 28px;
+        }
+
+        .login {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px 10px 10px;
+            font-size: 45px;
+            background-color: #7289da;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .login img {
+            height: 80px;
+            margin-right: 10px;
+        }
+
+        .container {
+            width: 800px;
+            padding: 0px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            margin: auto;
+        }
+
+        #login-wrap {
+            max-width: 500px;
+            padding: 20px;
+            background: #FFF;
+        }
+
+        #login-wrap p {
+            margin: 30px 0;
+        }
+
+    </style>
+
+    <div class="header">
+        <div>
+            <div class="wordmark">Mischief@Pagle</div>
+        </div>
+    </div>
+    <div class='container'>
+        <div id='login-wrap'>
+            <h1>Login</h1>
+            <p>
+            Mischief Tools collects your Discord username and email to help link up Discord users with WoW accounts.
+            </p>
+            <a class='login' href="{% provider_login_url "discord" process="login" %}">
+                <img src='{% static "mm_tools.web/discord-white.svg" %}' />
+                Login with Discord
+            </a>
+        </div>
+    </div>
+</body>
+</html>

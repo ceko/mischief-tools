@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from .api import views as api_views
+from rest_framework import routers
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
@@ -45,3 +47,10 @@ urlpatterns = [
     )),
     path('social/', include('allauth.socialaccount.urls'))
 ]
+
+
+router = routers.DefaultRouter()
+
+router.register('priorities', api_views.PriorityViewSet)
+router.register('items', api_views.ItemViewSet)
+urlpatterns += [path('api/v1/', include(router.urls)), ]

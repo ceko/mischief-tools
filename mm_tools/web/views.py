@@ -5,7 +5,7 @@ from django.contrib.auth import logout as logout_user
 
 @login_required
 def index(request):
-    return render(request, 'mm_tools.web/index.html')
+    return render(request, 'mm_tools.web/client.html')
 
 
 def logout(request):

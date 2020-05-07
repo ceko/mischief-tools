@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+BUILD_DIR="${DIR}/../mm_tools/client/build"
+DIST_DIR="${DIR}/../mm_tools/web/static/mm_tools.web.client"
+TEMPLATE_DIR="${DIR}/../mm_tools/web/templates/mm_tools.web"
+
+(cd "${DIR}/../mm_tools/client" && PUBLIC_URL='/static/mm_tools.web.client/' yarn build)
+
+rm -rf "${DIST_DIR}/static"
+cp -r "${BUILD_DIR}"/static "${DIST_DIR}/"
+cp "${BUILD_DIR}"/index.html "${TEMPLATE_DIR}/client.html"
