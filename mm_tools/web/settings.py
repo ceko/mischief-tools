@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
-    'mm_tools.web',
 
+    'debug_toolbar',
+    'mm_tools.web',
     'rest_framework',
     'django_filters',
     'corsheaders',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -189,5 +191,10 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = []
+
+INTERNAL_IPS = [
+    'localhost',
+    '127.0.0.1',
+]
 
 django_heroku.settings(locals())

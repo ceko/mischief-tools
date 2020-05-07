@@ -2,11 +2,12 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, filters
 from rest_framework import permissions
 from mm_tools.web.models import Priority, Item
-from .serializers import BulkPriorityUpdateSerializer, PrioritySerializer, ItemSerializer
+from mm_tools.web.permissions import EXPORT_PRIORITIES
+from .serializers import BulkPriorityUpdateSerializer, AllPrioritySerializer, PrioritySerializer, ItemSerializer
 import django_filters.rest_framework
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status, settings as api_settings
+from rest_framework import status, exceptions, settings as api_settings
 from rest_framework_csv.renderers import CSVRenderer
 
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
@@ -17,7 +18,8 @@ DEFAULT_RENDERERS = [JSONRenderer, BrowsableAPIRenderer]
 
 
 class PriorityViewSet(viewsets.ModelViewSet):
-    queryset = Priority.objects.all().order_by('item__zone', 'item__name')
+    queryset = Priority.objects.all().select_related(
+        'user', 'item').order_by('item__zone', 'item__name')
     serializer_class = PrioritySerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -25,8 +27,11 @@ class PriorityViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(user=self.request.user)
 
     def get_serializer_class(self):
+        print(self.action)
         if self.action == 'bulk_update':
             return BulkPriorityUpdateSerializer
+        elif self.action == 'all':
+            return AllPrioritySerializer
         else:
             return self.serializer_class
 
@@ -35,7 +40,10 @@ class PriorityViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False, renderer_classes=DEFAULT_RENDERERS + [CSVRenderer, ])
     def all(self, request):
-        serializer = self.serializer_class(self.queryset, many=True)
+        if not request.user.has_perm(EXPORT_PRIORITIES):
+            raise exceptions.PermissionDenied()
+
+        serializer = AllPrioritySerializer(self.queryset.all(), many=True)
         if isinstance(request.accepted_renderer, CSVRenderer):
             return Response(serializer.data)
         else:

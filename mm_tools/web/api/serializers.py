@@ -17,6 +17,16 @@ class PrioritySerializer(serializers.ModelSerializer):
         fields = ['id', 'added', 'updated', 'item']
 
 
+class AllPrioritySerializer(PrioritySerializer):
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return obj.user.username
+
+    class Meta(PrioritySerializer.Meta):
+        fields = PrioritySerializer.Meta.fields + ['user', ]
+
+
 class BulkPriorityUpdateSerializer(serializers.Serializer):
     items = serializers.ListField(child=serializers.IntegerField())
 

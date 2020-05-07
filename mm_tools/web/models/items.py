@@ -25,3 +25,6 @@ class Priority(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
+    class Meta:
+        permissions = [('can_export_priorities', 'Can export priorities')]

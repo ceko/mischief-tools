@@ -23,6 +23,7 @@ from importlib import import_module
 
 from allauth.socialaccount import providers
 from allauth.account import views as allauth_views
+from django.conf import settings
 
 provider_urlpatterns = []
 for provider in providers.registry.get_list():
@@ -54,3 +55,13 @@ router = routers.DefaultRouter()
 router.register('priorities', api_views.PriorityViewSet)
 router.register('items', api_views.ItemViewSet)
 urlpatterns += [path('api/v1/', include(router.urls)), ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+
+        # For django versions before 2.0:
+        # url(r'^__debug__/', include(debug_toolbar.urls)),
+
+    ] + urlpatterns
