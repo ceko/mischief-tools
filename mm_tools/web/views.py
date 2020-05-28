@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as logout_user
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
 def index(request):
+    logger.info("info")
+    logger.error("error")
     return render(request, 'mm_tools.web/client.html')
 
 

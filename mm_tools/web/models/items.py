@@ -1,12 +1,6 @@
 from django.db import models
 from django.conf import settings
-
-
-RAIDS = (
-    ('MC', 'Molten Core'),
-    ('BWL', 'Blackwing Lair'),
-    ('ZG', 'Zul\'gurub')
-)
+from .base import RAIDS
 
 
 class Item(models.Model):
@@ -16,7 +10,10 @@ class Item(models.Model):
     slot = models.CharField(max_length=150)
 
     def __str__(self):
-        return self.name
+        return "{} ({})".format(self.name, self.zone)
+
+    class Meta:
+        ordering = ('name',)
 
 
 class Priority(models.Model):
@@ -27,4 +24,5 @@ class Priority(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
 
     class Meta:
+        verbose_name_plural = "Priorities"
         permissions = [('can_export_priorities', 'Can export priorities')]

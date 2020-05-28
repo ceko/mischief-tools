@@ -37,8 +37,11 @@ export class API {
       credentials: "include",
       body: JSON.stringify({ items: itemIds }),
     });
+    if (result.status == 400) {
+      throw new Error((await result.json())["non_field_errors"]);
+    }
     if (result.status !== 201) {
-      throw new Error("Error updating priority");
+      throw new Error("generic error updating priority");
     }
   };
 

@@ -22,12 +22,12 @@ class PriorityViewSet(viewsets.ModelViewSet):
         'user', 'item').order_by('item__zone', 'item__name')
     serializer_class = PrioritySerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'post', 'head']
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
 
     def get_serializer_class(self):
-        print(self.action)
         if self.action == 'bulk_update':
             return BulkPriorityUpdateSerializer
         elif self.action == 'all':

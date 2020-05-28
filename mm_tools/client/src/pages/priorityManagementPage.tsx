@@ -99,8 +99,8 @@ class Page extends React.Component<PageProps, PageState> {
           this.feelGood!.classList.remove("feel-good-animate");
         }, 4000);
       }
-    } catch {
-      this.setSaveButton("Error Saving :(");
+    } catch (exc) {
+      this.setSaveButton("Error Saving: " + exc.message);
     }
   };
 

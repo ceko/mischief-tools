@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+while read line; do
+    echo "$line"
+done < <(cd "${DIR}"/../mm_tools/web/tests && PYTHONPATH="${DIR}"/../ pytest "$@")

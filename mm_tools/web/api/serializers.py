@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from mm_tools.web.models import Priority, Item
+from mm_tools.web.models import Priority, Item, RAIDS, BLACKWING_LAIR, MOLTEN_CORE, ZUL_GURUB, ONYXIA
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -30,6 +30,30 @@ class AllPrioritySerializer(PrioritySerializer):
 class BulkPriorityUpdateSerializer(serializers.Serializer):
     items = serializers.ListField(child=serializers.IntegerField())
 
+    def validate(self, data):
+        ids = data.get('items')
+        if len(ids) > 6:
+            raise serializers.ValidationError("Too many items specified.")
+
+        items = Item.objects.filter(id__in=ids)
+
+        def by_raid(items, raid):
+            return [i for i in items if i.zone == raid]
+
+        bwl_items = by_raid(items, BLACKWING_LAIR)
+        mc_items = by_raid(items, MOLTEN_CORE)
+        ony_items = by_raid(items, ONYXIA)
+
+        if len(bwl_items) > 3:
+            raise serializers.ValidationError(
+                "Too many tier 3 items specified.")
+
+        if len(mc_items) + len(ony_items) > 3:
+            raise serializers.ValidationError(
+                "Too many tier 1 items specified.")
+
+        return data
+
     def create(self, validated_data):
         item_ids = validated_data.get('items', [])
         user = validated_data.get('user')
@@ -50,6 +74,7 @@ class BulkPriorityUpdateSerializer(serializers.Serializer):
             item_id=id,
             user=user
         ) for id in new_ids]
+
         Priority.objects.bulk_create(new_items)
 
         return new_items

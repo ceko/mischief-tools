@@ -16,9 +16,11 @@ export const maxValidator = (max: number) => {
 };
 
 export const mcValidator = {
-  rule: "Up to 3 items from Molten Core",
+  rule: "Up to 3 items from Molten Core or Onyxia",
   isValid: (items: Array<Item>) => {
-    return items.filter((i) => i.zone == Raid.MC).length <= 3;
+    return (
+      items.filter((i) => i.zone == Raid.MC || i.zone == Raid.ONY).length <= 3
+    );
   },
 };
 

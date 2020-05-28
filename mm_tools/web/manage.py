@@ -4,6 +4,9 @@ import os
 import sys
 from dotenv import load_dotenv, find_dotenv
 
+# This directory is added to the path automatically, I don't want that
+sys.path.pop(0)
+
 
 def main():
     load_dotenv(find_dotenv())

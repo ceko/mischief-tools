@@ -30,6 +30,28 @@ DEBUG = bool(distutils.util.strtobool(os.environ.get("DEBUG", "False")))
 ALLOWED_HOSTS = ['*', ]
 SITE_ID = 1
 
+WARCRAFT_LOGS_API_KEY = os.environ.get("WARCRAFT_LOGS_API_KEY")
+
+CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "mm_tools"
+    }
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,6 +64,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'debug_toolbar',
+    'django_celery_beat',
+    'django_celery_results',
     'mm_tools.web',
     'rest_framework',
     'django_filters',
@@ -130,7 +154,7 @@ AUTHENTICATION_BACKENDS = (
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -148,17 +172,33 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d: %(message)s'
+        },
+        'simple': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+    },
     'handlers': {
         'console': {
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
-        },
+            'formatter': 'simple'
+        }
     },
     'loggers': {
-        'django': {
+        '': {
             'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+            'level': 'INFO',
+            'propagate': True
         },
-    },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+    }
 }
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -183,8 +223,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'mm_tools.web.api.authentication.CsrfExemptSessionAuthentication',
         'mm_tools.web.api.authentication.TokenAuthentication',
+        'mm_tools.web.api.authentication.CsrfExemptSessionAuthentication',
     ),
 }
 
@@ -197,4 +237,4 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), logging=False)
