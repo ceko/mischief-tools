@@ -237,4 +237,7 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
+GOOGLE_SHEETS_API_KEY = os.getenv('GOOGLE_SHEETS_API_KEY')
+PRIO_SHEET_URL_TEMPLATE = os.getenv('PRIO_SHEET_URL_TEMPLATE')
+
 django_heroku.settings(locals(), logging=False)

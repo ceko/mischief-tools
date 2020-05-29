@@ -1,20 +1,23 @@
 from django.contrib.auth.models import User, Group
+from django.conf import settings
 from rest_framework import viewsets, filters
 from rest_framework import permissions
 from mm_tools.web.models import Priority, Item
 from mm_tools.web.permissions import EXPORT_PRIORITIES
 from .serializers import BulkPriorityUpdateSerializer, AllPrioritySerializer, PrioritySerializer, ItemSerializer
 import django_filters.rest_framework
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework import status, exceptions, settings as api_settings
 from rest_framework_csv.renderers import CSVRenderer
+from django.views.decorators.cache import cache_page
 
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+import requests
+import time
+from django.utils.decorators import method_decorator
 
 DEFAULT_RENDERERS = [JSONRenderer, BrowsableAPIRenderer]
-
-# TODO: Add validation (MC/BWL/ZG validation)
 
 
 class PriorityViewSet(viewsets.ModelViewSet):
@@ -67,3 +70,33 @@ class ItemViewSet(viewsets.ModelViewSet):
         django_filters.rest_framework.DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['zone', 'name']
     search_fields = ['name', ]
+
+
+@api_view()
+@cache_page(60*15)
+def addon_priority_export(request):
+    sheets_url = settings.PRIO_SHEET_URL_TEMPLATE.format(
+        api_key=settings.GOOGLE_SHEETS_API_KEY
+    )
+
+    response = requests.get(sheets_url).json()
+    priority = {}
+
+    for value_range in response.get("valueRanges", []):
+        for value in value_range['values'][1:]:
+            item = value[0]
+            point_list = []
+
+            for cell in value[1:]:
+                character, points = cell.split(':')
+                point_list.append({
+                    'character': character.strip(),
+                    'points': int(points)
+                })
+
+            priority[item] = point_list
+
+    return Response({
+        'generated': time.time(),
+        'priority': priority
+    })

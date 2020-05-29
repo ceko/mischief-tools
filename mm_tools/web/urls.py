@@ -54,7 +54,11 @@ router = routers.DefaultRouter()
 
 router.register('priorities', api_views.PriorityViewSet)
 router.register('items', api_views.ItemViewSet)
+
 urlpatterns += [path('api/v1/', include(router.urls)), ]
+urlpatterns += [
+    path('api/v1/addon/priority', api_views.addon_priority_export)
+]
 
 if settings.DEBUG:
     import debug_toolbar
