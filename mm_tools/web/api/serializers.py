@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from mm_tools.web.models import Priority, Item, RAIDS, BLACKWING_LAIR, MOLTEN_CORE, ZUL_GURUB, ONYXIA
+from mm_tools.web.models import Priority, Item, RAIDS, BLACKWING_LAIR, MOLTEN_CORE, ZUL_GURUB, ONYXIA, AQ_40
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class BulkPriorityUpdateSerializer(serializers.Serializer):
 
     def validate(self, data):
         ids = data.get('items')
-        if len(ids) > 6:
+        if len(ids) > 9:
             raise serializers.ValidationError("Too many items specified.")
 
         items = Item.objects.filter(id__in=ids)
@@ -40,9 +40,14 @@ class BulkPriorityUpdateSerializer(serializers.Serializer):
         def by_raid(items, raid):
             return [i for i in items if i.zone == raid]
 
+        aq_40_items = by_raid(items, AQ_40)
         bwl_items = by_raid(items, BLACKWING_LAIR)
         mc_items = by_raid(items, MOLTEN_CORE)
         ony_items = by_raid(items, ONYXIA)
+
+        if len(aq_40_items) > 3:
+            raise serializers.ValidationError(
+                "Too many AQ 40 items specified.")
 
         if len(bwl_items) > 3:
             raise serializers.ValidationError(

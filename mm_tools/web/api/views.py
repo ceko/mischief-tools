@@ -85,7 +85,7 @@ def addon_priority_export(request):
     for value_range in response.get("valueRanges", []):
         for value in value_range['values'][1:]:
             item = value[0]
-            point_list = []
+            point_list = priority.get(item, [])
 
             for cell in value[1:]:
                 character, points = cell.split(':')

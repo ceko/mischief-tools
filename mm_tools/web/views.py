@@ -8,8 +8,7 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def index(request):
-    logger.info("info")
-    logger.error("error")
+    print(request.user)
     return render(request, 'mm_tools.web/client.html')
 
 

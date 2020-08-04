@@ -9,6 +9,7 @@ import {
   maxValidator,
   mcValidator,
   bwlValidator,
+  aq40Validator,
   otherValidator,
   PriorityValidatorMessage,
 } from "./priorityValidators";
@@ -25,9 +26,10 @@ export const SelectedItems = (props: SelectedItemsProps) => {
   const api = useContext(APIContext);
 
   const validators = [
-    maxValidator(6),
+    maxValidator(9),
     mcValidator,
     bwlValidator,
+    aq40Validator,
     otherValidator,
   ];
 

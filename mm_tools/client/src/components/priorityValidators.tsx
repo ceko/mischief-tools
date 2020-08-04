@@ -31,6 +31,13 @@ export const bwlValidator = {
   },
 };
 
+export const aq40Validator = {
+  rule: "Up to 3 items from AQ40",
+  isValid: (items: Array<Item>) => {
+    return items.filter((i) => i.zone == Raid.AQ_40).length <= 3;
+  },
+};
+
 export const otherValidator = {
   rule: "Optional: Fill remaining slots with other raids",
   isValid: (items: Array<Item>) => {

@@ -1,6 +1,7 @@
 export enum Raid {
   MC = "MC",
   BWL = "BWL",
+  AQ_40 = "AQ40",
   ZG = "ZG",
   ONY = "ONY",
 }

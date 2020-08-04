@@ -4,12 +4,16 @@ MOLTEN_CORE = 'MC'
 BLACKWING_LAIR = 'BWL'
 ZUL_GURUB = 'ZG'
 ONYXIA = 'ONY'
+AQ_20 = 'AQ20'
+AQ_40 = 'AQ40'
 
 RAIDS = (
     (MOLTEN_CORE, 'Molten Core'),
     (BLACKWING_LAIR, 'Blackwing Lair'),
     (ZUL_GURUB, 'Zul\'gurub'),
-    (ONYXIA, 'Onyxia')
+    (ONYXIA, 'Onyxia'),
+    (AQ_20, 'Temple of Ahn\'Qiraj'),
+    (AQ_40, 'Ruins of Ahn\'Qiraj')
 )
 
 __all__ = [
@@ -17,6 +21,8 @@ __all__ = [
     'BLACKWING_LAIR',
     'ZUL_GURUB',
     'ONYXIA',
+    'AQ_20',
+    'AQ_40',
     'RAIDS',
     'Config'
 ]
