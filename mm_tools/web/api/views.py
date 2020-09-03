@@ -83,15 +83,16 @@ def addon_priority_export(request):
     priority = {}
 
     for value_range in response.get("valueRanges", []):
-        for value in value_range['values'][1:]:
-            item = value[0]
+        for value in value_range['values'][1:]: # skip headers
+            item = value[0] # Item is the first column
             point_list = priority.get(item, [])
-
-            for cell in value[1:]:
+            
+            # skip the next columns
+            for cell in value[2:]: # remaining columns are player:point
                 character, points = cell.split(':')
                 point_list.append({
                     'character': character.strip(),
-                    'points': int(points)
+                    'points': int(points.split("(")[0])
                 })
 
             priority[item] = point_list

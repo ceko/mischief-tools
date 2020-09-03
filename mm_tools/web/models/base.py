@@ -12,8 +12,8 @@ RAIDS = (
     (BLACKWING_LAIR, 'Blackwing Lair'),
     (ZUL_GURUB, 'Zul\'gurub'),
     (ONYXIA, 'Onyxia'),
-    (AQ_20, 'Temple of Ahn\'Qiraj'),
-    (AQ_40, 'Ruins of Ahn\'Qiraj')
+    (AQ_20, 'Ruins of Ahn\'Qiraj'),
+    (AQ_40, 'Temple of Ahn\'Qiraj')
 )
 
 __all__ = [
