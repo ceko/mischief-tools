@@ -11,7 +11,9 @@ import {
   bwlValidator,
   aq40Validator,
   otherValidator,
+  tierValidator,
   PriorityValidatorMessage,
+  naxxValidator,
 } from "./priorityValidators";
 
 export interface SelectedItemsProps {
@@ -26,11 +28,10 @@ export const SelectedItems = (props: SelectedItemsProps) => {
   const api = useContext(APIContext);
 
   const validators = [
-    maxValidator(9),
-    mcValidator,
-    bwlValidator,
-    aq40Validator,
-    otherValidator,
+    maxValidator(6),
+    tierValidator,
+    naxxValidator,
+    //otherValidator,
   ];
 
   return (

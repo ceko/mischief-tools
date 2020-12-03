@@ -1,9 +1,7 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./styles/app.scss";
 import { Header } from "./components";
 import { PriorityManagementPage } from "./pages";
-import { APIContext } from "./context";
 
 function App() {
   return (

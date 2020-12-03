@@ -4,6 +4,7 @@ export enum Raid {
   AQ_40 = "AQ40",
   ZG = "ZG",
   ONY = "ONY",
+  NAXX = "NAXX"
 }
 
 export interface PriorityItem {
@@ -19,4 +20,11 @@ export interface Item {
   name: string;
   type: string;
   slot: string;
+  tiers: Array<ItemTier>;
+}
+
+export interface ItemTier {
+  id: number;
+  name: string;
+  color: string;
 }

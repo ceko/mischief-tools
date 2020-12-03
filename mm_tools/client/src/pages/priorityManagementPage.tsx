@@ -36,7 +36,7 @@ class Page extends React.Component<PageProps, PageState> {
     saveButtonText: "Save Changes",
   } as PageState;
 
-  private feelGood: HTMLDivElement | null = null;
+  private savePopup: HTMLDivElement | null = null;
   componentDidMount() {
     this.setup();
   }
@@ -93,10 +93,10 @@ class Page extends React.Component<PageProps, PageState> {
     try {
       await this.props.api.updatePriority(this.state.priority.map((i) => i.id));
       this.setSaveButton("Save Successful!");
-      if (this.feelGood) {
-        this.feelGood.classList.add("feel-good-animate");
+      if (this.savePopup) {
+        this.savePopup.classList.add("save-animate");
         setTimeout(() => {
-          this.feelGood!.classList.remove("feel-good-animate");
+          this.savePopup!.classList.remove("save-animate");
         }, 4000);
       }
     } catch (exc) {
@@ -135,7 +135,7 @@ class Page extends React.Component<PageProps, PageState> {
             </div>
           </div>
         )}
-        <div ref={(el) => (this.feelGood = el)} className="feels-good"></div>
+        <div ref={(el) => (this.savePopup = el)} className="oops-mindslayers"></div>
       </div>
     );
   }

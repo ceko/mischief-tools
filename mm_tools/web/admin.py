@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, Token, LootAwarded, Priority
+from .models import Item, Token, LootAwarded, Priority, ItemTier
 
 
 class ItemAdmin(admin.ModelAdmin):
@@ -24,7 +24,12 @@ class PriorityAdmin(admin.ModelAdmin):
         return obj.item.zone
 
 
+class ItemTierAdmin(admin.ModelAdmin):
+    filter_vertical = ('items',)
+
+
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Token, admin.ModelAdmin)
 admin.site.register(LootAwarded, LootAwardedAdmin)
 admin.site.register(Priority, PriorityAdmin)
+admin.site.register(ItemTier, ItemTierAdmin)

@@ -26,3 +26,12 @@ class Priority(models.Model):
     class Meta:
         verbose_name_plural = "Priorities"
         permissions = [('can_export_priorities', 'Can export priorities')]
+
+
+class ItemTier(models.Model):
+    name = models.CharField(max_length=20)
+    color = models.CharField(max_length=20)
+    items = models.ManyToManyField(Item, related_name='tiers')
+
+    def __str__(self):
+        return self.name

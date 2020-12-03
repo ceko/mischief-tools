@@ -9,6 +9,7 @@ import { ItemProvider } from "./itemProvider";
 import { debounce } from "ts-debounce";
 import { Item } from "../../models";
 import styled from "styled-components";
+import { ItemTiers } from "..";
 
 type AutoSuggestProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -178,6 +179,7 @@ const Results = (props: ResultsProps) => {
     <ResultWrap className="result-wrap" disabled={props.disabled}>
       {props.items.map((item: Item) => (
         <Result className="result" onClick={() => props.onClick(item)}>
+          <ItemTiers tiers={item.tiers} />
           <div className="name">{item.name}</div>
           <div className="type">{item.type}</div>
           <div className="slot">{item.slot}</div>

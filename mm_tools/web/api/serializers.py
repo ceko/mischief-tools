@@ -1,12 +1,20 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from mm_tools.web.models import Priority, Item, RAIDS, BLACKWING_LAIR, MOLTEN_CORE, ZUL_GURUB, ONYXIA, AQ_40
+from mm_tools.web.models import Priority, Item, RAIDS, BLACKWING_LAIR, MOLTEN_CORE, ZUL_GURUB, ONYXIA, AQ_40, NAXX, ItemTier
+
+
+class ItemTierSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ItemTier
+        fields = ('id', 'name', 'color')
 
 
 class ItemSerializer(serializers.ModelSerializer):
+    tiers = ItemTierSerializer(many=True)
+
     class Meta:
         model = Item
-        fields = ['id', 'name', 'zone', 'type', 'slot']
+        fields = ['id', 'name', 'zone', 'type', 'slot', 'tiers']
 
 
 class PrioritySerializer(serializers.ModelSerializer):
@@ -32,30 +40,29 @@ class BulkPriorityUpdateSerializer(serializers.Serializer):
 
     def validate(self, data):
         ids = data.get('items')
-        if len(ids) > 9:
+        if len(ids) > 6:
             raise serializers.ValidationError("Too many items specified.")
 
-        items = Item.objects.filter(id__in=ids)
+        items = Item.objects.filter(id__in=ids).prefetch_related('tiers')
 
         def by_raid(items, raid):
             return [i for i in items if i.zone == raid]
 
-        aq_40_items = by_raid(items, AQ_40)
-        bwl_items = by_raid(items, BLACKWING_LAIR)
-        mc_items = by_raid(items, MOLTEN_CORE)
-        ony_items = by_raid(items, ONYXIA)
+        naxx_items = by_raid(items, NAXX)
 
-        if len(aq_40_items) > 3:
+        if len(naxx_items) > 3:
             raise serializers.ValidationError(
-                "Too many AQ 40 items specified.")
+                "Too many Naxx items specified.")
 
-        if len(bwl_items) > 3:
-            raise serializers.ValidationError(
-                "Too many tier 3 items specified.")
+        tier_count = {}
 
-        if len(mc_items) + len(ony_items) > 3:
+        for item in items:
+            for tier in item.tiers.all():
+                tier_count[tier.id] = tier_count.get(tier.id, 0) + 1
+
+        if [i for i in tier_count.values() if i > 1]:
             raise serializers.ValidationError(
-                "Too many tier 1 items specified.")
+                "Only one of each tier allowed.")
 
         return data
 

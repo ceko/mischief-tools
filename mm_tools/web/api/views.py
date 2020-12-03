@@ -22,7 +22,7 @@ DEFAULT_RENDERERS = [JSONRenderer, BrowsableAPIRenderer]
 
 class PriorityViewSet(viewsets.ModelViewSet):
     queryset = Priority.objects.all().select_related(
-        'user', 'item').order_by('item__zone', 'item__name')
+        'user', 'item').prefetch_related('item__tiers').order_by('item__zone', 'item__name')
     serializer_class = PrioritySerializer
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ['get', 'post', 'head']
@@ -62,7 +62,7 @@ class PriorityViewSet(viewsets.ModelViewSet):
 
 
 class ItemViewSet(viewsets.ModelViewSet):
-    queryset = Item.objects.all().order_by('name')
+    queryset = Item.objects.all().prefetch_related('tiers').order_by('name')
     serializer_class = ItemSerializer
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ['get', 'head']
@@ -86,7 +86,7 @@ def addon_priority_export(request):
         for value in value_range['values'][1:]: # skip headers
             item = value[0] # Item is the first column
             point_list = priority.get(item, [])
-            
+
             # skip the next columns
             for cell in value[2:]: # remaining columns are player:point
                 character, points = cell.split(':')

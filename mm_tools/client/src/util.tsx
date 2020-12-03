@@ -22,6 +22,8 @@ export const formatZone = (zone: Raid) => {
       return "Onyxia";
     case Raid.ZG:
       return "Zul'gurub";
+    case Raid.NAXX:
+      return "Naxx";
   }
 
   return zone;

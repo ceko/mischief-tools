@@ -6,6 +6,7 @@ ZUL_GURUB = 'ZG'
 ONYXIA = 'ONY'
 AQ_20 = 'AQ20'
 AQ_40 = 'AQ40'
+NAXX = 'NAXX'
 
 RAIDS = (
     (MOLTEN_CORE, 'Molten Core'),
@@ -13,7 +14,8 @@ RAIDS = (
     (ZUL_GURUB, 'Zul\'gurub'),
     (ONYXIA, 'Onyxia'),
     (AQ_20, 'Ruins of Ahn\'Qiraj'),
-    (AQ_40, 'Temple of Ahn\'Qiraj')
+    (AQ_40, 'Temple of Ahn\'Qiraj'),
+    (NAXX, 'Naxx')
 )
 
 __all__ = [
@@ -23,6 +25,7 @@ __all__ = [
     'ONYXIA',
     'AQ_20',
     'AQ_40',
+    'NAXX',
     'RAIDS',
     'Config'
 ]
